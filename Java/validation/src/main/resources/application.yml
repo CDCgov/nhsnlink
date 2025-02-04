@@ -1,0 +1,54 @@
+artifact:
+  init: true
+loki:
+  enabled: false
+  url: ''
+  app: link-dev
+
+server:
+  port: 31820
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+
+spring:
+  application:
+    name: ValidationService
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ''
+  #datasource:
+  #  url: jdbc:sqlserver://;serverName=localhost\SQLEXPRESS;encrypt=true;trustServerCertificate=true
+  #  username: link-user
+  #  password: link-password
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      show_sql: true
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+  kafka:
+    bootstrap-servers: ''
+    consumer:
+      group-id: validation
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    producer:
+      client-id: validation-service
+    #properties:
+      #security.protocol: SASL_SSL
+      #sasl.mechanism: PLAIN
+      #sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="";
+
+secret-management:
+  key-vault-uri: ''
+
+authentication:
+  anonymous: false
+  authority: ''
