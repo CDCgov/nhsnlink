@@ -6,34 +6,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LantanaGroup.Link.Normalization.Domain.Entities;
 
-[Table("Operation")]
-public partial class Operation
+[Table("ResourceType")]
+public partial class ResourceType
 {
     [Key]
     public Guid Id { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
-    public string FacilityId { get; set; }
+    public string Name { get; set; }
 
-    [Required]
-    [Unicode(false)]
-    public string OperationJson { get; set; }
-
-    [Required]
-    [StringLength(255)]
-    [Unicode(false)]
-    public string OperationType { get; set; }
-
-    [Unicode(false)]
-    public string Description { get; set; }
-
-    public bool IsDisabled { get; set; }
-
-    public DateTime CreateDate { get; set; }
-
-    public DateTime? ModifyDate { get; set; }
-
-    [InverseProperty("Operation")]
+    [InverseProperty("ResourceType")]
     public virtual ICollection<OperationResourceType> OperationResourceTypes { get; set; } = new List<OperationResourceType>();
 }
