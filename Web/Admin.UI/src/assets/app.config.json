@@ -1,0 +1,10 @@
+{
+  "production": false,
+  "authRequired": true,
+  "baseApiUrl": "/api",
+  "oauth2": {
+    "enabled": false,
+    "scope": "openid profile email",
+    "responseType": "code"
+  }
+}
