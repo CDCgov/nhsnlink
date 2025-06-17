@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <springProperty scope="context" name="loki_enabled" source="loki.enabled"/>
+    <springProperty scope="context" name="loki_url" source="loki.url"/>
+    <springProperty scope="context" name="loki_app" source="loki.app" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%-10.10thread] %-5level %-40.40logger{40} %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <if condition='property("loki_enabled").equalsIgnoreCase("true")'>
+        <then>
+            <appender name="LOKI" class="com.lantanagroup.link.shared.logging.DelayedHttpAppender">
+                <http>
+                    <url>${loki_url}/loki/api/v1/push</url>
+                </http>
+                <format>
+                    <label>
+                        <pattern>app=${loki_app},component=MeasureEval,TraceId="%X{traceId}",SpanId="%X{spanId}"</pattern>
+                        <readMarkers>true</readMarkers>
+                    </label>
+                    <message>
+                        <pattern>
+                            {
+                            "level":"%level",
+                            "class":"%logger{36}",
+                            "thread":"%thread",
+                            "message":"%message",
+                            "requestId":"%X{X-Request-ID}",
+                            "TraceId":"%X{traceId}",
+                            "SpanId":"%X{spanId}",
+                            }
+                        </pattern>
+                    </message>
+                </format>
+                <batchMaxItems>25</batchMaxItems>
+            </appender>
+        </then>
+    </if>
+
+    <logger name="com.lantanagroup.link" level="debug"/>
+
+    <if condition='property("loki_enabled").equalsIgnoreCase("true")'>
+        <then>
+            <root level="info">
+                <appender-ref ref="STDOUT"/>
+                <appender-ref ref="LOKI"/>
+            </root>
+
+        </then>
+        <else>
+            <root level="info">
+                <appender-ref ref="STDOUT"/>
+            </root>
+        </else>
+    </if>
+</configuration>

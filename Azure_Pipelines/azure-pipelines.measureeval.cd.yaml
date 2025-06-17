@@ -1,0 +1,97 @@
+resources:
+  pipelines:
+  - pipeline: pipeline-trigger
+    source: Deploy_All_Services
+    trigger: true
+
+trigger:
+  branches:
+    include:
+    - dev
+    - release/*
+    - linkathon/*
+  paths:
+    include:
+    - Java/measureeval/*
+    - Java/shared/*
+    exclude:
+    - '*'
+    
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: link-cloud-variables
+- name: repositoryName
+  value: 'link-measureeval'
+- name: dockerPath
+  value: 'Java/measureeval/Dockerfile'
+- name: serviceName
+  value: 'measureeval'
+
+steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        GIT_COMMIT=$(git rev-parse --short HEAD)
+        echo "GIT_COMMIT: ${GIT_COMMIT}"
+        echo "##vso[task.setvariable variable=GIT_COMMIT]${GIT_COMMIT}"
+
+  - task: Maven@2
+    displayName: Maven Install
+    inputs:
+      mavenPomFile: 'Java/pom.xml'
+      goals: install
+      options: '-pl measureeval -am'
+
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: |
+        if ("$(Build.SourceBranch)" -like "*release/*") {
+        $myTag1 = "release-$(Build.SourceBranchName)-$(GIT_COMMIT)"
+        }
+        else { 
+        $myTag1 = "$(Build.SourceBranchName)-$(GIT_COMMIT)"
+        }
+        Write-Host "##vso[task.setvariable variable=MyTag]$myTag1"
+        Write-Host "Set MyTag to: $myTag1"
+  - task: Docker@2
+    displayName: "Build & Push MeasureEval Docker Image"
+    condition: always()
+    inputs:
+      containerRegistry: $(containerRegistry) # Variable Group
+      repository: $(repositoryName)
+      command: 'buildAndPush'
+      Dockerfile: $(dockerPath)
+      tags: |
+        latest
+        $(MyTag)
+      buildContext: 'Java/'
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifact: 'manifest'
+
+  - task: Maven@2
+    displayName: Package CLI
+    inputs:
+      mavenPomFile: 'Java/pom.xml'
+      goals: 'clean package'
+      options: '-P cli -pl measureeval -am'
+      
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish MeasureEval CLI Jar'
+    inputs:
+      targetPath: 'Java/measureeval/target/measureeval-cli.jar'
+      artifact: 'measureeval-cli-jar'

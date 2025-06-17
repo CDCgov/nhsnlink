@@ -1,0 +1,79 @@
+<form [formGroup]="facilityConfigForm" class="dialog-form">
+  <div class="form-input">
+    <mat-form-field appearance="outline" class="subject-input form-input ">
+      <mat-label>Facility Id</mat-label>
+      <input matInput formControlName="facilityId" [readonly]="viewOnly">
+      <button *ngIf="facilityIdControl.value && !viewOnly" matSuffix mat-icon-button aria-label="Clear"
+              (click)="clearFacilityId()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="facilityIdControl.hasError('required')">
+        A facility id is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-input">
+    <mat-form-field appearance="outline" class="subject-input form-input ">
+      <mat-label>Facility Name</mat-label>
+      <input matInput formControlName="facilityName" [readonly]="viewOnly">
+      <button *ngIf="facilityNameControl.value && !viewOnly" matSuffix mat-icon-button aria-label="Clear"
+              (click)="clearFacilityName()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="facilityNameControl.hasError('required')">
+        A facility name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Timezone</mat-label>
+    <mat-select formControlName="timeZone" [placeholder]="'Select Timezone'">
+      <mat-option *ngFor="let timezone of timezones" [value]="timezone">
+        {{ timezone }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="timeZoneControl.hasError('required')">
+      Timezone is required
+    </mat-error>
+  </mat-form-field>
+
+  <div class="scheduled-reports-container">
+    <span class="title">Scheduled Reports</span>
+
+    <mat-form-field class="form-select" appearance="outline">
+      <mat-label>Monthly</mat-label>
+      <mat-select formControlName="monthlyReports" [compareWith]="compareReportTypes" multiple>
+        <mat-option [disabled]="viewOnly" *ngFor="let type of reportTypes" [disabled]="viewOnly" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="form-select" appearance="outline">
+      <mat-label>Daily</mat-label>
+      <mat-select formControlName="dailyReports" [disabled]="viewOnly" [compareWith]="compareReportTypes" multiple>
+        <mat-option [disabled]="viewOnly" *ngFor="let type of reportTypes" [disabled]="viewOnly" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="form-select" appearance="outline">
+      <mat-label>Weekly</mat-label>
+      <mat-select formControlName="weeklyReports" [disabled]="viewOnly" [compareWith]="compareReportTypes" multiple>
+        <mat-option [disabled]="viewOnly" *ngFor="let type of reportTypes" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="reportsNotUniqueError && !viewOnly && (this.facilityConfigForm.touched || this.facilityConfigForm.dirty)">
+    <small class="error">{{ reportsNotUniqueError }}</small>
+  </div>
+
+  <div *ngIf="noReportsEntered && !viewOnly &&  (this.facilityConfigForm.touched || this.facilityConfigForm.dirty)" >
+    <small class="error">{{ noReportsEntered }}</small>
+  </div>
+
+</form>
