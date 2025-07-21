@@ -3,6 +3,13 @@ Org: Division of Healthcare Quality Promotion (DHQP)
 
 Contact: ncezid_shareit@cdc.gov
 
+Description: [brief text without PII]: CDC’s National Healthcare Safety Network is the nation’s healthcare-associated infection tracking system and public health surveillance system for healthcare. NHSN provides facilities, states, regions, and the nation with data needed to identify problem areas, measure progress of prevention efforts, and ultimately eliminate healthcare-associated infections. Additionally, NHSN continues to support the nation’s COVID-19 response with COVID-19 Modules for reporting in Hospitals, Long Term Care facilities, including nursing homes, and Dialysis facilities and NHSN allows healthcare facilities to track blood safety errors and important healthcare process measures such as healthcare personnel influenza vaccine status and infection control adherence rates.
+
+Exemption: Exempt by Mission System
+
+Exemption Justification: Powers real-time or near-time decisions during disease outbreaks, investigations, or other public health emergencies
+
+
 ## Table of Contents
 * [Introduction](#introduction)
 * [Documentation](#documentation)
