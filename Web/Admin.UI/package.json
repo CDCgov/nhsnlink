@@ -38,8 +38,8 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.6",
-    "@angular/cli": "20.3.6",
+    "@angular/build": "^20.3.14",
+    "@angular/cli": "20.3.14",
     "@angular/compiler-cli": "20.3.6",
     "@types/crypto-js": "^4.1.1",
     "@types/d3": "^7.4.3",
