@@ -429,3 +429,6 @@ Config/config-key-inventory.json
 .agent-out/
 .tmp*/
 .tmp-*/
+
+# Stopgap
+.env
